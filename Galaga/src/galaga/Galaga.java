@@ -5,15 +5,18 @@
  */
 package galaga;
 
+import galaga.Hilos.*;
 /**
  *
  * @author Josh
  */
 public class Galaga {
-
     /**
      * @param args the command line arguments
      */
+    public static Jugador jugador; 
+    
+    
     public static void main(String[] args) {
         VentanaJuego ventanaJuego = new VentanaJuego();
         ventanaJuego.iniciar();

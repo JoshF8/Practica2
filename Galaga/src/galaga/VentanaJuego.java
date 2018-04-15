@@ -4,8 +4,11 @@
  * and open the template in the editor.
  */
 package galaga;
+import galaga.Hilos.Jugador;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 /**
  *
  * @author Josh
@@ -13,13 +16,14 @@ import java.awt.*;
 public class VentanaJuego extends JFrame{
     
     int ancho = 300, alto = 450;
-    
+    Jugador jugador;
     public VentanaJuego() {
         super("Mini-Gálaga");
         setResizable(false);
         setSize(ancho, alto);
         setLocationRelativeTo(null);
         setLayout(null);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
         ImageIcon icon = new ImageIcon("src//graficos//FondoR.jpg");
         JLabel fondo = new JLabel();
         fondo.setBounds(0, 0, ancho, alto);
@@ -27,16 +31,27 @@ public class VentanaJuego extends JFrame{
         fondo.setIcon(icono);
         getContentPane().add(fondo, -1);
         setVisible(true);
+        addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                jugador.keyPressed(e);
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                jugador.keyPressed(e);
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                
+            }
+        });
     }
     
     public void iniciar(){
-        JLabel Jugador = new JLabel();
-        Jugador.setBounds(120,300,50,50);
-        ImageIcon imagJugador = new ImageIcon("src//graficos//Jugador.png");
-        Icon iconJugador = new ImageIcon(imagJugador.getImage().getScaledInstance(Jugador.getWidth(), Jugador.getHeight(), Image.SCALE_SMOOTH));
-        Jugador.setIcon(iconJugador);
-        getContentPane().add(Jugador,0);
-        repaint();
-        validate();
+        this.jugador = new Jugador(this);
+        Galaga.jugador = jugador;
+        this.jugador.run();
     }
 }
