@@ -7,7 +7,7 @@ package galaga.Hilos;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.*;
-import galaga.VentanaJuego;
+import galaga.*;
 import java.awt.event.KeyEvent;
 /**
  *
@@ -18,7 +18,7 @@ public class Jugador extends Thread{
     JLabel graficoJugador;
     VentanaJuego ventana;
     int velocidad = 15;
-    boolean vivo = true, movimiento = true;
+    public boolean vivo = true;
     
     public Jugador(VentanaJuego ventanaJuego){
         ventana = ventanaJuego;
@@ -39,6 +39,10 @@ public class Jugador extends Thread{
         if(e.getKeyCode() == 37 && graficoJugador.getBounds().x > 0){
             graficoJugador.setLocation(graficoJugador.getLocation().x - (1*velocidad), graficoJugador.getLocation().y);
         }
+        if(e.getKeyChar() == 106 && ((Galaga.disparos.isEmpty())?true : Galaga.disparos.get(Galaga.disparos.size() - 1).tiempoUltimo > 300 )&& Galaga.disparos.size() < 5){
+            Disparo disparo = new Disparo(graficoJugador.getBounds().x, ventana, Disparo.BalaNormal);
+            disparo.start();
+        }
     }
 
     @Override
@@ -49,7 +53,7 @@ public class Jugador extends Thread{
                 ventana.repaint();
             }
         }catch(InterruptedException ex){
-            
+           
         }
         
     }

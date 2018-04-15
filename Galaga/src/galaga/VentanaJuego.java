@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 package galaga;
-import galaga.Hilos.Jugador;
+import galaga.Hilos.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -52,6 +52,8 @@ public class VentanaJuego extends JFrame{
     public void iniciar(){
         this.jugador = new Jugador(this);
         Galaga.jugador = jugador;
-        this.jugador.run();
+        this.jugador.start();
+        CreadorEnemigos creadorEnemigos = new CreadorEnemigos();
+        creadorEnemigos.start();
     }
 }

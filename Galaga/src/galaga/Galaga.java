@@ -6,6 +6,8 @@
 package galaga;
 
 import galaga.Hilos.*;
+import java.awt.List;
+import java.util.ArrayList;
 /**
  *
  * @author Josh
@@ -15,11 +17,12 @@ public class Galaga {
      * @param args the command line arguments
      */
     public static Jugador jugador; 
-    
-    
+    public static ArrayList<Disparo> disparos = new ArrayList<Disparo>();
+    public static ArrayList<Enemigos> enemigos = new ArrayList<Enemigos>();
+    public static VentanaJuego ventana;
     public static void main(String[] args) {
-        VentanaJuego ventanaJuego = new VentanaJuego();
-        ventanaJuego.iniciar();
+        ventana = new VentanaJuego();
+        ventana.iniciar();
     }
     
 }
