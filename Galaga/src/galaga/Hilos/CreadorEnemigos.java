@@ -14,12 +14,16 @@ import galaga.Galaga;
 public class CreadorEnemigos extends Thread{
 
     @Override
-    public void run() {
+    public synchronized void run() {
         try {
             while(Galaga.jugador.vivo){
-                sleep((long)(Math.random()*3)*1000 + 1000);
-                Enemigos enemigo = new Enemigos((int)(Math.random()*3));
-                enemigo.start();
+                    sleep((long)(Math.random()*3)*1000 + 1000);
+                    Enemigos enemigo = new Enemigos((int)(Math.random()*3));
+                    enemigo.start();
+                    if(Galaga.jugador.pausa) {                    
+                        wait();
+                    }
+                
             }
         } catch (InterruptedException ex) {
         }

@@ -21,10 +21,10 @@ public class Galaga {
     public static ArrayList<Enemigos> enemigos = new ArrayList<Enemigos>();
     public static VentanaJuego ventana;
     public static Cronometro cronometro;
+    public static  CreadorEnemigos creadorEnemigos;
     
     public static void main(String[] args) {
         ventana = new VentanaJuego();
-        ventana.iniciar();
     }
     
 }

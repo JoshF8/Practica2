@@ -22,15 +22,22 @@ public class Cronometro extends Thread{
     }
     
     @Override
-    public void run() {
-        try {
-            while(segundos > 0 && Galaga.jugador.vivo){
-                tiempo.setText(String.valueOf(segundos));
-                punteo.setText(String.valueOf(puntos));
-                sleep(1000);
-                segundos--;
-            }
-            Galaga.jugador.vivo = false;
+    public synchronized void run() {
+        try {               
+                while(segundos > 0 && Galaga.jugador.vivo){
+                    
+                        sleep(1000);
+                        segundos--;
+                        tiempo.setText(String.valueOf(segundos));
+                        punteo.setText(String.valueOf(puntos));
+                        if(Galaga.jugador.pausa) {                    
+                        wait();
+                    }
+
+                }
+                Galaga.jugador.vivo = false;
+            
+           
         } catch (InterruptedException ex) {
         }
     }

@@ -25,7 +25,7 @@ public class Enemigos extends Thread{
         this.ventana = Galaga.ventana;
         this.tipoEnemigo = tipoEnemigo;
         graficoEnemigo = new JLabel();
-        graficoEnemigo.setBounds((int)(Math.random()*241),0,40,30);
+        graficoEnemigo.setBounds((int)(Math.random()*241),-40,40,30);
         ImageIcon imagJugador = new ImageIcon("src//graficos//Enemigo"+ tipoEnemigo + ".png");
         Icon iconJugador = new ImageIcon(imagJugador.getImage().getScaledInstance(graficoEnemigo.getWidth(), graficoEnemigo.getHeight(), Image.SCALE_SMOOTH));
         graficoEnemigo.setIcon(iconJugador);
@@ -75,13 +75,16 @@ public class Enemigos extends Thread{
     }
 
     @Override
-    public void run() {
-        try {
-            while (graficoEnemigo.getLocation().y < 550 && Galaga.jugador.vivo) {                    
+    public synchronized void run() {
+        try {             
+            while(graficoEnemigo.getLocation().y < 550 && Galaga.jugador.vivo){
                 sleep(5);
                 graficoEnemigo.setLocation(graficoEnemigo.getLocation().x, graficoEnemigo.getLocation().y + (1*velocidad));
                 ventana.repaint();
                 Colision();
+                if(Galaga.jugador.pausa) {                    
+                    wait();
+                }
             }
             destruir();
         } catch (InterruptedException ex) {

@@ -41,15 +41,19 @@ public class Disparo extends Thread{
     }
     
     @Override
-    public void run() {
-        try {
-            while (graficoBala.getLocation().y > - 20) {                    
+    public synchronized void run() {
+        try { 
+            while(graficoBala.getLocation().y > - 20 && Galaga.jugador.vivo){                 
                 sleep(5);
                 tiempoUltimo += 5; 
                 graficoBala.setLocation(graficoBala.getLocation().x, graficoBala.getLocation().y - (1*velocidad));
                 ventana.repaint();
+                if(Galaga.jugador.pausa) {                    
+                    wait();
+                }
             }
             destruir();
+            
         } catch (InterruptedException ex) {
             System.out.println("aca");
         }

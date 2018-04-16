@@ -18,7 +18,7 @@ public class Jugador extends Thread{
     JLabel graficoJugador;
     VentanaJuego ventana;
     int velocidad = 20;
-    public boolean vivo = true;
+    public boolean vivo = true, pausa = false;
     
     public Jugador(VentanaJuego ventanaJuego){
         ventana = ventanaJuego;
@@ -33,7 +33,7 @@ public class Jugador extends Thread{
     }
     
     public void keyPressed(KeyEvent e){
-        if(vivo){
+        if(vivo && !pausa){
             if(e.getKeyCode() == 39 && graficoJugador.getBounds().x < 270){
                 graficoJugador.setLocation(graficoJugador.getLocation().x + (1*velocidad), graficoJugador.getLocation().y);
             }
@@ -52,11 +52,14 @@ public class Jugador extends Thread{
     }
 
     @Override
-    public void run() {
+    public synchronized void run() {
         try{
             while(vivo){
                 Thread.sleep(5);
                 ventana.repaint();
+                if(pausa){
+                    wait();
+                }
             }
         }catch(InterruptedException ex){
            
