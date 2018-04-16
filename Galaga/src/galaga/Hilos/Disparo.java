@@ -18,13 +18,14 @@ public class Disparo extends Thread{
     private String balas[] = {"BalaNormalPlayer.png"};
     JLabel graficoBala;
     VentanaJuego ventana;
-    int velocidad = 2;
+    int velocidad = 2, tipoBala;
     public double tiempoUltimo = 751;
     
     public Disparo(int x, VentanaJuego ventanaJuego, int tipoBala){
         ventana = ventanaJuego;
+        this.tipoBala = tipoBala;
         graficoBala = new JLabel();
-        graficoBala.setBounds(x + 27, 300, 6, 20);
+        graficoBala.setBounds(x + 17, 440, 6, 20);
         ImageIcon imagBala = new ImageIcon("src//graficos//" + balas[tipoBala]);
         Icon iconJugador = new ImageIcon(imagBala.getImage().getScaledInstance(graficoBala.getWidth(), graficoBala.getHeight(), Image.SCALE_SMOOTH));
         graficoBala.setIcon(iconJugador);
@@ -32,6 +33,11 @@ public class Disparo extends Thread{
         tiempoUltimo = 0;
         ventanaJuego.repaint();
         Galaga.disparos.add(this);
+    }
+    
+    public void destruir(){
+        graficoBala.setLocation(0, -30);
+        Galaga.disparos.remove(this);
     }
     
     @Override
@@ -43,7 +49,7 @@ public class Disparo extends Thread{
                 graficoBala.setLocation(graficoBala.getLocation().x, graficoBala.getLocation().y - (1*velocidad));
                 ventana.repaint();
             }
-            Galaga.disparos.remove(this);
+            destruir();
         } catch (InterruptedException ex) {
             System.out.println("aca");
         }

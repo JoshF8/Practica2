@@ -17,13 +17,13 @@ public class Jugador extends Thread{
     
     JLabel graficoJugador;
     VentanaJuego ventana;
-    int velocidad = 15;
+    int velocidad = 20;
     public boolean vivo = true;
     
     public Jugador(VentanaJuego ventanaJuego){
         ventana = ventanaJuego;
         graficoJugador = new JLabel();
-        graficoJugador.setBounds(120,320,60,50);
+        graficoJugador.setBounds(120,450,40,30);
         ImageIcon imagJugador = new ImageIcon("src//graficos//Jugador.png");
         Icon iconJugador = new ImageIcon(imagJugador.getImage().getScaledInstance(graficoJugador.getWidth(), graficoJugador.getHeight(), Image.SCALE_SMOOTH));
         graficoJugador.setIcon(iconJugador);
@@ -33,15 +33,21 @@ public class Jugador extends Thread{
     }
     
     public void keyPressed(KeyEvent e){
-        if(e.getKeyCode() == 39 && graficoJugador.getBounds().x < 240){
-            graficoJugador.setLocation(graficoJugador.getLocation().x + (1*velocidad), graficoJugador.getLocation().y);
-        }
-        if(e.getKeyCode() == 37 && graficoJugador.getBounds().x > 0){
-            graficoJugador.setLocation(graficoJugador.getLocation().x - (1*velocidad), graficoJugador.getLocation().y);
-        }
-        if(e.getKeyChar() == 106 && ((Galaga.disparos.isEmpty())?true : Galaga.disparos.get(Galaga.disparos.size() - 1).tiempoUltimo > 300 )&& Galaga.disparos.size() < 5){
-            Disparo disparo = new Disparo(graficoJugador.getBounds().x, ventana, Disparo.BalaNormal);
-            disparo.start();
+        if(vivo){
+            if(e.getKeyCode() == 39 && graficoJugador.getBounds().x < 270){
+                graficoJugador.setLocation(graficoJugador.getLocation().x + (1*velocidad), graficoJugador.getLocation().y);
+            }
+            if(e.getKeyCode() == 37 && graficoJugador.getBounds().x > 0){
+                graficoJugador.setLocation(graficoJugador.getLocation().x - (1*velocidad), graficoJugador.getLocation().y);
+            }
+            try {
+                if(e.getKeyChar() == 106 && ((Galaga.disparos.isEmpty())?true : Galaga.disparos.get(Galaga.disparos.size() - 1).tiempoUltimo > 300 )&& Galaga.disparos.size() < 5){
+                Disparo disparo = new Disparo(graficoJugador.getBounds().x, ventana, Disparo.BalaNormal);
+                disparo.start();
+                }
+            }catch (Exception ex) {
+            }
+        
         }
     }
 
