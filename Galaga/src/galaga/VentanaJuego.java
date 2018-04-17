@@ -20,6 +20,7 @@ public class VentanaJuego extends JFrame implements ActionListener{
     int ancho = 300, alto = 550;
     Jugador jugador;
     JLabel punteo, tiempo;
+    JMenuItem juegoNuevo = new JMenuItem("Juego nuevo"), pausar = new JMenuItem("Pausa"), renuadar = new JMenuItem("Renuadar");
     
     public VentanaJuego() {
         super("Mini-Gálaga");
@@ -41,11 +42,12 @@ public class VentanaJuego extends JFrame implements ActionListener{
         punteo.setFont(new Font("Arial", Font.BOLD, 20));
         punteo.setForeground(Color.WHITE);
         punteo.setBounds(260, 70, 50, 30);
-        JMenuBar menu = new JMenuBar();
-        JMenuItem juegoNuevo = new JMenuItem("Juego nuevo"), pausar = new JMenuItem("Pausa"), renuadar = new JMenuItem("Renuadar");
+        JMenuBar menu = new JMenuBar();       
         juegoNuevo.addActionListener(this);
         pausar.addActionListener(this);
         renuadar.addActionListener(this);
+        pausar.setEnabled(false);
+        renuadar.setEnabled(false);
         menu.add(juegoNuevo);
         menu.add(pausar);
         menu.add(renuadar);
@@ -62,9 +64,7 @@ public class VentanaJuego extends JFrame implements ActionListener{
                 try {
                     jugador.keyPressed(e);
                 } catch (Exception ex) {
-                }
-                
-                
+                }   
             }
 
             @Override
@@ -124,12 +124,18 @@ public class VentanaJuego extends JFrame implements ActionListener{
         switch(e.getActionCommand()){
             case "Juego nuevo":
                 iniciar();
+                pausar.setEnabled(true);
+                renuadar.setEnabled(false);
                 break;
             case "Pausa":
                 Galaga.jugador.pausa = true;
+                renuadar.setEnabled(true);
+                pausar.setEnabled(false);
                 break;
             case "Renuadar":
                 renuadar();
+                pausar.setEnabled(true);
+                renuadar.setEnabled(false);
                 break;
         }
     }
