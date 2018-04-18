@@ -42,7 +42,7 @@ public class Cronometro extends Thread{
                     }
 
                 }
-                Galaga.jugador.vivo = false;
+                Galaga.ventana.finalizar();
             
            
         } catch (InterruptedException ex) {

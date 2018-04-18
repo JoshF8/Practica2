@@ -12,6 +12,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
+import java.util.Collections;
 /**
  *
  * @author Josh
@@ -22,6 +23,7 @@ public class VentanaJuego extends JFrame implements ActionListener{
     Jugador jugador;
     JLabel punteo, tiempo;
     JMenuItem juegoNuevo = new JMenuItem("Juego nuevo"), pausar = new JMenuItem("Pausa"), renuadar = new JMenuItem("Renuadar");
+    JMenu top3 = new JMenu("Top 3");
     public JLabel escudo;
     public VentanaJuego() {
         super("Mini-Gálaga");
@@ -45,7 +47,7 @@ public class VentanaJuego extends JFrame implements ActionListener{
         punteo = new JLabel("0");
         punteo.setFont(new Font("Arial", Font.BOLD, 20));
         punteo.setForeground(Color.WHITE);
-        punteo.setBounds(260, 70, 50, 30);
+        punteo.setBounds(250, 70, 50, 30);
         JMenuBar menu = new JMenuBar();       
         juegoNuevo.addActionListener(this);
         pausar.addActionListener(this);
@@ -55,11 +57,12 @@ public class VentanaJuego extends JFrame implements ActionListener{
         menu.add(juegoNuevo);
         menu.add(pausar);
         menu.add(renuadar);
+        menu.add(top3);
         menu.setBounds(0,0,300,20);
         getContentPane().add(tiempo);
         getContentPane().add(punteo);
         getContentPane().add(menu);
-        getContentPane().add(escudo);
+        //getContentPane().add(escudo);
         getContentPane().add(fondo, -1);
         setJMenuBar(menu);
         setVisible(true);
@@ -96,6 +99,9 @@ public class VentanaJuego extends JFrame implements ActionListener{
             CreadorEnemigos creadorEnemigos = new CreadorEnemigos();
             creadorEnemigos.start();
             Galaga.creadorEnemigos = creadorEnemigos;
+            CreadorItems creadorItems = new CreadorItems();
+            creadorItems.start();
+            Galaga.creadorItems = creadorItems;
             Cronometro cronometro = new Cronometro(tiempo, punteo);
             Galaga.cronometro = cronometro;
             cronometro.start();
@@ -118,23 +124,47 @@ public class VentanaJuego extends JFrame implements ActionListener{
                 for(Enemigos enemigo : enemigosAux){
                     enemigo.destruir();
                 }
-            }else{
+            }else if(!Galaga.creadorEnemigos.isAlive() && !Galaga.creadorItems.isAlive()){
                 Galaga.jugador.reiniciar();
                 Galaga.cronometro = new Cronometro(tiempo, punteo);
                 Galaga.cronometro.start();
                 Galaga.creadorEnemigos = new CreadorEnemigos();
                 Galaga.creadorEnemigos.start();
+                Galaga.creadorItems = new CreadorItems();
+                Galaga.creadorItems.start();
             }
         }
     }
     
     public void finalizar(){
-    
+        if(Galaga.jugador.vivo){
+            Galaga.jugador.vivo = false;
+            pausar.setEnabled(false);
+            int contador = 0;
+            top3.removeAll();
+            Galaga.nombresTop.add("Nombre:" + JOptionPane.showInputDialog(this, "Ingrese su nombre:") +" Puntos:" + punteo.getText());
+            Galaga.puntosTop.add(Integer.valueOf(punteo.getText()));
+            Collections.sort(Galaga.puntosTop);
+            Collections.reverse(Galaga.puntosTop);
+            for(Integer valor : Galaga.puntosTop){
+                for(String texto : Galaga.nombresTop){
+                    if(texto.contains("Puntos:"+valor)){
+                        top3.add(texto);
+                        break;
+                    }
+                }
+                contador++;
+                if(contador == 3){
+                    break;
+                }
+            }
+            top3.repaint();
+        }
     }
     
     public void escudo(boolean valor){
         if(valor){
-            getContentPane().add(escudo);
+            getContentPane().add(escudo, getContentPane().getComponents().length-1);
         }else{
             getContentPane().remove(escudo);
         }
@@ -151,6 +181,11 @@ public class VentanaJuego extends JFrame implements ActionListener{
             for(Disparo disparo : Galaga.disparos){
                 synchronized (disparo){
                     disparo.notify();
+                }
+            }
+            for(Item item : Galaga.items){
+                synchronized (item){
+                    item.notify();
                 }
             }
             synchronized (Galaga.creadorEnemigos){

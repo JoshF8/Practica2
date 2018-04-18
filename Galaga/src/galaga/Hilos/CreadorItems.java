@@ -6,27 +6,32 @@
 package galaga.Hilos;
 
 import galaga.Galaga;
+import static java.lang.Thread.sleep;
 
 /**
  *
  * @author Josh
  */
-public class CreadorEnemigos extends Thread{
-    
+public class CreadorItems extends Thread{
     static int ID;
     int id2;
     
-    public CreadorEnemigos(){
+    public CreadorItems(){
         id2 = ID++;
     }
-
-    @Override
+    
+     @Override
     public synchronized void run() {
         try {
             while(Galaga.jugador.vivo){
-                    sleep((long)(Math.random()*3)*1000 + 1000);
-                    Enemigos enemigo = new Enemigos((int)(Math.random()*3));
-                    enemigo.start();
+                    sleep((long)(Math.random()*3)*1000 + 5000);
+                    int tipo = 0;
+                    double valor = Math.random()*10;
+                    if(valor > 7.5){
+                        tipo = 1;
+                    }
+                    Item item = new Item(tipo);
+                    item.start();
                     if(Galaga.jugador.pausa) {                    
                         wait();
                     }
@@ -34,5 +39,4 @@ public class CreadorEnemigos extends Thread{
         } catch (InterruptedException ex) {
         }
     }
-    
 }

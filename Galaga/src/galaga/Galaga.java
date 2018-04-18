@@ -19,11 +19,13 @@ public class Galaga {
     public static Jugador jugador; 
     public static ArrayList<Disparo> disparos = new ArrayList<Disparo>();
     public static ArrayList<Enemigos> enemigos = new ArrayList<Enemigos>();
+    public static ArrayList<Item> items = new ArrayList<>();
     public static ArrayList<String> nombresTop = new ArrayList<>();
     public static ArrayList<Integer> puntosTop = new ArrayList<>();
     public static VentanaJuego ventana;
     public static Cronometro cronometro;
-    public static  CreadorEnemigos creadorEnemigos;
+    public static CreadorEnemigos creadorEnemigos;
+    public static CreadorItems creadorItems;
     public static boolean iniciado = false;
     
     public static void main(String[] args) {

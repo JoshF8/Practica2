@@ -17,7 +17,8 @@ public class Jugador extends Thread{
     
     JLabel graficoJugador;
     VentanaJuego ventana;
-    private int velocidad = 20, tiroEspecial = 5; 
+    private int velocidad = 20;
+    public int tiroEspecial = 0;
     private boolean  escudo = false;
     public boolean vivo = true, pausa = false;
     
@@ -45,7 +46,7 @@ public class Jugador extends Thread{
             }
             try {
                 if(e.getKeyChar() == 106 && ((Galaga.disparos.isEmpty())?true : Galaga.disparos.get(Galaga.disparos.size() - 1).tiempoUltimo > 300 )&& Galaga.disparos.size() < 5){
-                    Disparo disparo = new Disparo(graficoJugador.getBounds().x, ventana, ((tiroEspecial > 0) ? Disparo.BalaEspecial : Disparo.BalaNormal));
+                    Disparo disparo = new Disparo(graficoJugador.getBounds().x, graficoJugador.getLocation().y- 10, ventana, ((tiroEspecial > 0) ? Disparo.BalaEspecial : Disparo.BalaNormal));
                     disparo.start();
                     if(tiroEspecial != 0){
                         tiroEspecial--;
@@ -59,10 +60,17 @@ public class Jugador extends Thread{
     
     public void chocar(){
         if(!escudo){
-            Galaga.jugador.vivo = false;
+            ventana.finalizar();
         }else{
             escudo = false;
             ventana.escudo(false);
+        }
+    }
+    
+    public void activarEscudo(){
+        if(!escudo){
+            escudo = true;
+            ventana.escudo(true);
         }
     }
     
@@ -72,6 +80,7 @@ public class Jugador extends Thread{
         tiroEspecial = 0;
         escudo = false;
         vivo = true;
+        pausa = false;
     }
 
     @Override

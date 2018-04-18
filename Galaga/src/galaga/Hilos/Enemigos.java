@@ -77,15 +77,29 @@ public class Enemigos extends Thread{
     }
     
     public void destruir(){
-        Galaga.enemigos.remove(this);
-        graficoEnemigo.setLocation(0, 600);
+        try {
+            Galaga.enemigos.remove(this);
+            graficoEnemigo.setLocation(0, 600);
+        } catch (Exception e) {
+        }
+        
     }
 
     @Override
     public synchronized void run() {
         try {             
+            int tiempo = 0;
             while(graficoEnemigo.getLocation().y < 550 && Galaga.jugador.vivo){
                 sleep(5);
+                if(tipoEnemigo == 1){
+                    if(tiempo < 800){
+                        tiempo += 5;
+                    }else{
+                        tiempo = 0;
+                        Disparo disparo = new Disparo(graficoEnemigo.getLocation().x, graficoEnemigo.getLocation().y + 40, ventana, 2);
+                        disparo.start();
+                    }
+                }
                 graficoEnemigo.setLocation(graficoEnemigo.getLocation().x, graficoEnemigo.getLocation().y + (1*velocidad));
                 ventana.repaint();
                 Colision();
