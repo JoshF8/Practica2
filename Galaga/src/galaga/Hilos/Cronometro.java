@@ -21,6 +21,13 @@ public class Cronometro extends Thread{
         this.punteo = punteo;
     }
     
+    public void reiniciar(){
+        segundos = 60;
+        puntos = 0;
+        tiempo.setText(String.valueOf(segundos));
+        punteo.setText(String.valueOf(puntos));
+    }
+    
     @Override
     public synchronized void run() {
         try {               

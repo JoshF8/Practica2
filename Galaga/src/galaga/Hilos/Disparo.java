@@ -15,7 +15,7 @@ import java.awt.*;
 public class Disparo extends Thread{
     
     public static final int BalaNormal = 0, BalaEspecial = 1, BalaEnemigo = 2;
-    private String balas[] = {"BalaNormalPlayer.png"};
+    private String balas[] = {"BalaNormalPlayer.png", "BalaEspecialPlayer.png"};
     JLabel graficoBala;
     VentanaJuego ventana;
     int velocidad = 2, tipoBala;

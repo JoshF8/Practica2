@@ -11,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
 /**
  *
  * @author Josh
@@ -21,7 +22,7 @@ public class VentanaJuego extends JFrame implements ActionListener{
     Jugador jugador;
     JLabel punteo, tiempo;
     JMenuItem juegoNuevo = new JMenuItem("Juego nuevo"), pausar = new JMenuItem("Pausa"), renuadar = new JMenuItem("Renuadar");
-    
+    public JLabel escudo;
     public VentanaJuego() {
         super("Mini-Gálaga");
         setResizable(false);
@@ -29,11 +30,14 @@ public class VentanaJuego extends JFrame implements ActionListener{
         setLocationRelativeTo(null);
         setLayout(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        ImageIcon icon = new ImageIcon("src//graficos//FondoR.jpg");
+        ImageIcon icon = new ImageIcon("src//graficos//FondoR.jpg"), icon1 = new ImageIcon("src//graficos//Escudo.png");
         JLabel fondo = new JLabel();
+        escudo = new JLabel();
         fondo.setBounds(0, 0, ancho, alto);
-        Icon icono = new ImageIcon(icon.getImage().getScaledInstance(fondo.getWidth(), fondo.getHeight(), Image.SCALE_SMOOTH));
+        escudo.setBounds(115,440,50,40);
+        Icon icono = new ImageIcon(icon.getImage().getScaledInstance(fondo.getWidth(), fondo.getHeight(), Image.SCALE_SMOOTH)), icono1 = new ImageIcon(icon1.getImage().getScaledInstance(escudo.getWidth(), escudo.getHeight(), Image.SCALE_SMOOTH));
         fondo.setIcon(icono);
+        escudo.setIcon(icono1);
         tiempo = new JLabel("60");
         tiempo.setFont(new Font("Arial", Font.BOLD, 20));
         tiempo.setForeground(Color.WHITE);
@@ -55,6 +59,7 @@ public class VentanaJuego extends JFrame implements ActionListener{
         getContentPane().add(tiempo);
         getContentPane().add(punteo);
         getContentPane().add(menu);
+        getContentPane().add(escudo);
         getContentPane().add(fondo, -1);
         setJMenuBar(menu);
         setVisible(true);
@@ -84,15 +89,55 @@ public class VentanaJuego extends JFrame implements ActionListener{
     }
     
     public void iniciar(){
-        this.jugador = new Jugador(this);
-        Galaga.jugador = jugador;
-        this.jugador.start();
-        CreadorEnemigos creadorEnemigos = new CreadorEnemigos();
-        creadorEnemigos.start();
-        Galaga.creadorEnemigos = creadorEnemigos;
-        Cronometro cronometro = new Cronometro(tiempo, punteo);
-        Galaga.cronometro = cronometro;
-        cronometro.start();
+        if(!Galaga.iniciado){
+            this.jugador = new Jugador(this);
+            Galaga.jugador = jugador;
+            this.jugador.start();
+            CreadorEnemigos creadorEnemigos = new CreadorEnemigos();
+            creadorEnemigos.start();
+            Galaga.creadorEnemigos = creadorEnemigos;
+            Cronometro cronometro = new Cronometro(tiempo, punteo);
+            Galaga.cronometro = cronometro;
+            cronometro.start();
+            Galaga.iniciado = true;
+        }else{
+            if(Galaga.jugador.vivo){
+                Galaga.jugador.reiniciar();
+                Galaga.cronometro.reiniciar();
+                ArrayList<Disparo> disparosAux = new ArrayList<Disparo>();
+                for(Disparo disparo : Galaga.disparos){
+                    disparosAux.add(disparo);
+                }
+                for(Disparo disparo : disparosAux){
+                    disparo.destruir();
+                }
+                ArrayList<Enemigos> enemigosAux = new ArrayList<Enemigos>();
+                for(Enemigos enemigo : Galaga.enemigos){
+                    enemigosAux.add(enemigo);
+                }
+                for(Enemigos enemigo : enemigosAux){
+                    enemigo.destruir();
+                }
+            }else{
+                Galaga.jugador.reiniciar();
+                Galaga.cronometro = new Cronometro(tiempo, punteo);
+                Galaga.cronometro.start();
+                Galaga.creadorEnemigos = new CreadorEnemigos();
+                Galaga.creadorEnemigos.start();
+            }
+        }
+    }
+    
+    public void finalizar(){
+    
+    }
+    
+    public void escudo(boolean valor){
+        if(valor){
+            getContentPane().add(escudo);
+        }else{
+            getContentPane().remove(escudo);
+        }
     }
     
     public void renuadar(){

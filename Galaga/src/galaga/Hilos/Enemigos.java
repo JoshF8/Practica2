@@ -42,18 +42,25 @@ public class Enemigos extends Thread{
     private void Colision(){
         Area forma1 = new Area(graficoEnemigo.getBounds());
         Area forma2;
-        boolean valor = false;
+        boolean valor = false, especial = false;
         try{
             for(Disparo disparo : Galaga.disparos){
                 forma2 = new Area(disparo.graficoBala.getBounds());
                 if(forma1.getBounds().intersects(forma2.getBounds()) && disparo.tipoBala != 2){
                     valor = true;
+                    if(disparo.tipoBala == 1){
+                        especial = true;
+                    }
                     disparo.destruir();
                     break;
                 }
             }
             if(valor){
-                vida--;
+                if(especial && tipoEnemigo != 2){
+                    vida = 0;
+                }else{
+                    vida--;
+                }
                 if(vida == 0){
                     destruir();
                     Galaga.cronometro.puntos += (tipoEnemigo + 1)*10;      
@@ -62,14 +69,14 @@ public class Enemigos extends Thread{
             forma2 = new Area(Galaga.jugador.graficoJugador.getBounds());
             if(forma1.getBounds().intersects(forma2.getBounds())){
                 destruir();
-                Galaga.jugador.vivo = false;
+                Galaga.jugador.chocar();
             }
         }catch(Exception ex){
         
         }
     }
     
-    private void destruir(){
+    public void destruir(){
         Galaga.enemigos.remove(this);
         graficoEnemigo.setLocation(0, 600);
     }
